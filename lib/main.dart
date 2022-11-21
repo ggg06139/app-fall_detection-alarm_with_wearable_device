@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,21 +7,20 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'bucket_service.dart';
+import 'auth_service.dart';
 
 late SharedPreferences prefs;
-
 void main() async {
   // main() 함수에서 async를 쓰려면 필요
   WidgetsFlutterBinding.ensureInitialized();
 
   // shared_preferences 인스턴스 생성
   prefs = await SharedPreferences.getInstance();
-
+  await Firebase.initializeApp(); // firebase 앱 시작
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => BucketService()),
+        ChangeNotifierProvider(create: (context) => AuthService()),
       ],
       child: const MyApp(),
     ),
@@ -31,6 +32,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    User? user = context.read<AuthService>().currentUser();
+
     // SharedPreferences에서 온보딩 완료 여부 조회
     // isOnboarded에 해당하는 값에서 null을 반환하는 경우 false 할당
     bool isOnboarded = prefs.getBool("isOnboarded") ?? false;
@@ -39,7 +42,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.getTextTheme('IBM Plex Sans KR'),
       ),
-      home: isOnboarded ? HomePage() : OnboardingPage(),
+      home: isOnboarded
+          ? (user == null ? LoginPage() : HomePage())
+          : OnboardingPage(),
     );
   }
 }
@@ -101,70 +106,110 @@ class OnboardingPage extends StatelessWidget {
   }
 }
 
-/// 버킷 클래스
-class Bucket {
-  String job; // 할 일
-  bool isDone; // 완료 여부
+/// 로그인 페이지
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
-  Bucket(this.job, this.isDone); // 생성자
+  @override
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-/// 홈 페이지
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+class _LoginPageState extends State<LoginPage> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BucketService>(
-      builder: (context, bucketService, child) {
-        List<Bucket> bucketList = bucketService.bucketList;
+    return Consumer<AuthService>(
+      builder: (context, authService, child) {
+        User? user = authService.currentUser();
         return Scaffold(
-          appBar: AppBar(
-            title: Text("버킷 리스트"),
-          ),
-          body: bucketList.isEmpty
-              ? Center(child: Text("버킷 리스트를 작성해 주세요."))
-              : ListView.builder(
-                  itemCount: bucketList.length, // bucketList 개수 만큼 보여주기
-                  itemBuilder: (context, index) {
-                    var bucket = bucketList[index]; // index에 해당하는 bucket 가져오기
-                    return ListTile(
-                      // 버킷 리스트 할 일
-                      title: Text(
-                        bucket.job,
-                        style: TextStyle(
-                          fontSize: 24,
-                          color: bucket.isDone ? Colors.grey : Colors.black,
-                          decoration: bucket.isDone
-                              ? TextDecoration.lineThrough
-                              : TextDecoration.none,
-                        ),
-                      ),
-                      // 삭제 아이콘 버튼
-                      trailing: IconButton(
-                        icon: Icon(CupertinoIcons.delete),
-                        onPressed: () {
-                          // 삭제 버튼 클릭시
-                          bucketService.deleteBucket(index);
-                        },
-                      ),
-                      onTap: () {
-                        // 아이템 클릭시
-                        bucket.isDone = !bucket.isDone;
-                        bucketService.updateBucket(bucket, index);
+          appBar: AppBar(title: Text("로그인")),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                /// 현재 유저 로그인 상태
+                Center(
+                  child: Text(
+                    user == null ? "로그인해 주세요 🙂" : "${user.email}님 안녕하세요 👋",
+                    style: TextStyle(
+                      fontSize: 24,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 32),
+
+                /// 이메일
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(hintText: "이메일"),
+                ),
+
+                /// 비밀번호
+                TextField(
+                  controller: passwordController,
+                  obscureText: false, // 비밀번호 안보이게
+                  decoration: InputDecoration(hintText: "비밀번호"),
+                ),
+                SizedBox(height: 32),
+
+                /// 로그인 버튼
+                ElevatedButton(
+                  child: Text("로그인", style: TextStyle(fontSize: 21)),
+                  onPressed: () {
+                    // 로그인
+                    authService.signIn(
+                      email: emailController.text,
+                      password: passwordController.text,
+                      onSuccess: () {
+                        // 로그인 성공
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("로그인 성공"),
+                        ));
+
+                        // HomePage로 이동
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
+                      },
+                      onError: (err) {
+                        // 에러 발생
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(err),
+                        ));
                       },
                     );
                   },
                 ),
-          floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () {
-              // + 버튼 클릭시 버킷 생성 페이지로 이동
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => CreatePage()),
-              );
-            },
+
+                /// 회원가입 버튼
+                ElevatedButton(
+                  child: Text("회원가입", style: TextStyle(fontSize: 21)),
+                  onPressed: () {
+                    // 회원가입
+                    authService.signUp(
+                      email: emailController.text,
+                      password: passwordController.text,
+                      onSuccess: () {
+                        // 회원가입 성공
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("회원가입 성공"),
+                        ));
+                      },
+                      onError: (err) {
+                        // 에러 발생
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(err),
+                        ));
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -172,277 +217,109 @@ class HomePage extends StatelessWidget {
   }
 }
 
-/// 버킷 생성 페이지
-class CreatePage extends StatefulWidget {
-  const CreatePage({Key? key}) : super(key: key);
+/// 홈페이지
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<CreatePage> createState() => _CreatePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _CreatePageState extends State<CreatePage> {
-  // TextField의 값을 가져올 때 사용합니다.
-  TextEditingController textController = TextEditingController();
-
-  // 경고 메세지
-  String? error;
+class _HomePageState extends State<HomePage> {
+  TextEditingController jobController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("버킷리스트 작성"),
-        // 뒤로가기 버튼
-        leading: IconButton(
-          icon: Icon(CupertinoIcons.chevron_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // 텍스트 입력창
-            TextField(
-              controller: textController,
-              autofocus: true,
-              decoration: InputDecoration(
-                hintText: "하고 싶은 일을 입력하세요",
-                errorText: error,
+        title: Text("버킷 리스트"),
+        actions: [
+          TextButton(
+            child: Text(
+              "로그아웃",
+              style: TextStyle(
+                color: Colors.white,
               ),
             ),
-            SizedBox(height: 32),
-            // 추가하기 버튼
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: ElevatedButton(
-                child: Text(
-                  "추가하기",
-                  style: TextStyle(
-                    fontSize: 18,
+            onPressed: () {
+              // 로그아웃
+              context.read<AuthService>().signOut();
+
+              // 로그인 페이지로 이동
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              );
+            },
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          /// 입력창
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              children: [
+                /// 텍스트 입력창
+                Expanded(
+                  child: TextField(
+                    controller: jobController,
+                    decoration: InputDecoration(
+                      hintText: "하고 싶은 일을 입력해주세요.",
+                    ),
                   ),
                 ),
-                onPressed: () {
-                  // 추가하기 버튼 클릭시
-                  String job = textController.text;
-                  if (job.isEmpty) {
-                    setState(() {
-                      error = "내용을 입력해주세요."; // 내용이 없는 경우 에러 메세지
-                    });
-                  } else {
-                    setState(() {
-                      error = null; // 내용이 있는 경우 에러 메세지 숨기기
-                    });
-                    // BucketService 가져오기
-                    BucketService bucketService = context.read<BucketService>();
-                    bucketService.createBucket(job);
-                    Navigator.pop(context); // 화면을 종료합니다.
-                  }
-                },
-              ),
+
+                /// 추가 버튼
+                ElevatedButton(
+                  child: Icon(Icons.add),
+                  onPressed: () {
+                    // create bucket
+                    if (jobController.text.isNotEmpty) {
+                      print("create bucket");
+                    }
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Divider(height: 1),
+
+          /// 버킷 리스트
+          Expanded(
+            child: ListView.builder(
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                String job = "$index";
+                bool isDone = false;
+                return ListTile(
+                  title: Text(
+                    job,
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: isDone ? Colors.grey : Colors.black,
+                      decoration: isDone
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
+                    ),
+                  ),
+                  // 삭제 아이콘 버튼
+                  trailing: IconButton(
+                    icon: Icon(CupertinoIcons.delete),
+                    onPressed: () {
+                      // 삭제 버튼 클릭시
+                    },
+                  ),
+                  onTap: () {
+                    // 아이템 클릭하여 isDone 업데이트
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 }
-
-
-
-// /// 버킷 클래스
-// class Bucket {
-//   String job; // 할 일
-//   bool isDone; // 완료 여부
-
-//   Bucket(this.job, this.isDone); // 생성자
-// }
-
-// class HomePage extends StatefulWidget {
-//   const HomePage({Key? key}) : super(key: key);
-
-//   @override
-//   State<HomePage> createState() => _HomePageState();
-// }
-
-// class _HomePageState extends State<HomePage> {
-//   List<Bucket> bucketList = []; // 전체 버킷리스트 목록
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("버킷 리스트"),
-//         actions: [
-//           // 삭제 버튼
-//           IconButton(
-//             onPressed: () {
-//               // SharedPreferences에 저장된 모든 데이터 삭제
-//               prefs.clear();
-//             },
-//             icon: Icon(Icons.delete),
-//           )
-//         ],
-//       ),
-//       body: bucketList.isEmpty
-//           ? Center(child: Text("버킷 리스트를 작성해 주세요."))
-//           : ListView.builder(
-//               itemCount: bucketList.length, // bucketList 개수 만큼 보여주기
-//               itemBuilder: (context, index) {
-//                 Bucket bucket = bucketList[index]; // index에 해당하는 bucket 가져오기
-//                 return ListTile(
-//                   // 버킷 리스트 할 일
-//                   title: Text(
-//                     bucket.job,
-//                     style: TextStyle(
-//                       color: bucket.isDone ? Colors.grey : Colors.black,
-//                       decoration: bucket.isDone
-//                           ? TextDecoration.lineThrough
-//                           : TextDecoration.none,
-//                       fontSize: 24,
-//                     ),
-//                   ),
-//                   // 삭제 아이콘 버튼
-//                   trailing: IconButton(
-//                     icon: Icon(CupertinoIcons.delete),
-//                     onPressed: () {
-//                       // 삭제 버튼 클릭시
-//                       showDeleteDialog(context, index);
-//                     },
-//                   ),
-//                   onTap: () {
-//                     // 아이템 클릭시
-//                     setState(() {
-//                       bucket.isDone = !bucket.isDone;
-//                     });
-//                   },
-//                 );
-//               },
-//             ),
-//       floatingActionButton: FloatingActionButton(
-//         child: Icon(Icons.add),
-//         onPressed: () async {
-//           // + 버튼 클릭시 버킷 생성 페이지로 이동
-//           String? job = await Navigator.push(
-//             context,
-//             MaterialPageRoute(builder: (_) => CreatePage()),
-//           );
-//           if (job != null) {
-//             setState(() {
-//               Bucket newBucket = Bucket(job, false);
-//               bucketList.add(newBucket);
-//             });
-//           }
-//         },
-//       ),
-//     );
-//   }
-
-//   void showDeleteDialog(BuildContext context, int index) {
-//     showDialog(
-//       context: context,
-//       builder: (context) {
-//         return AlertDialog(
-//           title: Text("정말로 삭제하시겠습니까?"),
-//           actions: [
-//             // 취소 버튼
-//             TextButton(
-//               onPressed: () {
-//                 Navigator.pop(context);
-//               },
-//               child: Text("취소"),
-//             ),
-//             // 확인 버튼
-//             TextButton(
-//               onPressed: () {
-//                 setState(() {
-//                   bucketList.removeAt(index);
-//                 });
-//                 Navigator.pop(context);
-//               },
-//               child: Text(
-//                 "확인",
-//                 style: TextStyle(color: Colors.pink),
-//               ),
-//             ),
-//           ],
-//         );
-//       },
-//     );
-//   }
-// }
-
-// /// 버킷 생성 페이지
-// class CreatePage extends StatefulWidget {
-//   const CreatePage({Key? key}) : super(key: key);
-
-//   @override
-//   State<CreatePage> createState() => _CreatePageState();
-// }
-
-// class _CreatePageState extends State<CreatePage> {
-//   // TextField의 값을 가져올 때 사용합니다.
-//   TextEditingController textController = TextEditingController();
-//   String? error;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("버킷리스트 작성"),
-//         // 뒤로가기 버튼
-//         leading: IconButton(
-//           icon: Icon(CupertinoIcons.chevron_back),
-//           onPressed: () {
-//             Navigator.pop(context);
-//           },
-//         ),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16),
-//         child: Column(
-//           children: [
-//             // 텍스트 입력창
-//             TextField(
-//               controller: textController,
-//               autofocus: true,
-//               decoration:
-//                   InputDecoration(hintText: "하고 싶은 일을 입력하세요", errorText: error),
-//             ),
-//             SizedBox(height: 32),
-//             // 추가하기 버튼
-//             SizedBox(
-//               width: double.infinity,
-//               height: 48,
-//               child: ElevatedButton(
-//                 child: Text(
-//                   "추가하기",
-//                   style: TextStyle(
-//                     fontSize: 18,
-//                   ),
-//                 ),
-//                 onPressed: () {
-//                   String job = textController.text;
-//                   if (job.isEmpty) {
-//                     setState(() {
-//                       error = "내용을 입력해주세요.";
-//                     });
-//                   } else {
-//                     setState(() {
-//                       error = null;
-//                     });
-//                     Navigator.pop(context, job);
-//                   }
-//                   // 추가하기 버튼 클릭시
-//                 },
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

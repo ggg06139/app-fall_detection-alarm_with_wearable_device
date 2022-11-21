@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "721950072341",
+    "project_id": "fallalertapp-cae18",
+    "storage_bucket": "fallalertapp-cae18.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:721950072341:android:51582942e4e10d9627781c",
+        "android_client_info": {
+          "package_name": "com.example.fall_alert_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "721950072341-kf9p8pfsnlt4us79tc7695ulakrtboer.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOZpg5lp1Z2nfhFwlY0eimiHlylUaWYjY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "721950072341-kf9p8pfsnlt4us79tc7695ulakrtboer.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
