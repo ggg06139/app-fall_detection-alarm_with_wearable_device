@@ -3,7 +3,7 @@
     <string name="default_web_client_id" translatable="false">721950072341-kf9p8pfsnlt4us79tc7695ulakrtboer.apps.googleusercontent.com</string>
     <string name="gcm_defaultSenderId" translatable="false">721950072341</string>
     <string name="google_api_key" translatable="false">AIzaSyBOZpg5lp1Z2nfhFwlY0eimiHlylUaWYjY</string>
-    <string name="google_app_id" translatable="false">1:721950072341:android:51582942e4e10d9627781c</string>
+    <string name="google_app_id" translatable="false">1:721950072341:android:2c49703de80e1ebf27781c</string>
     <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBOZpg5lp1Z2nfhFwlY0eimiHlylUaWYjY</string>
     <string name="google_storage_bucket" translatable="false">fallalertapp-cae18.appspot.com</string>
     <string name="project_id" translatable="false">fallalertapp-cae18</string>
