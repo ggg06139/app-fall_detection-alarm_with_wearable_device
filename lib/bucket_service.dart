@@ -21,9 +21,13 @@ class BucketService extends ChangeNotifier {
 
   void update(String docId, bool isDone) async {
     // bucket isDone 업데이트
+    await bucketCollection.doc(docId).update({"isDone": isDone});
+    notifyListeners();
   }
 
   void delete(String docId) async {
     // bucket 삭제
+    await bucketCollection.doc(docId).delete();
+    notifyListeners();
   }
 }

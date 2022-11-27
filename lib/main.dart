@@ -4,12 +4,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:introduction_screen/introduction_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'auth_service.dart';
 import 'bucket_service.dart';
+import 'onboarding.dart';
 
 late SharedPreferences prefs;
 void main() async {
@@ -48,63 +48,6 @@ class MyApp extends StatelessWidget {
       home: isOnboarded
           ? (user == null ? LoginPage() : HomePage())
           : OnboardingPage(),
-    );
-  }
-}
-
-class OnboardingPage extends StatelessWidget {
-  const OnboardingPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: IntroductionScreen(
-        pages: [
-          // 첫 번째 페이지
-          PageViewModel(
-            title: "낙상 알람 앱",
-            body: "낙상 시 보호자의 스마트폰으로 알람이 갑니다.",
-            decoration: PageDecoration(
-              titleTextStyle: TextStyle(
-                color: Colors.blueAccent,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-              bodyTextStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-              ),
-            ),
-          ),
-          // 두 번째 페이지
-          PageViewModel(
-            title: "시작하세요",
-            body: "안전을 위한 앱, 지금 바로 시작하세요.",
-            decoration: PageDecoration(
-              titleTextStyle: TextStyle(
-                color: Colors.blueAccent,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-              bodyTextStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-              ),
-            ),
-          ),
-        ],
-        next: Text("Next", style: TextStyle(fontWeight: FontWeight.w600)),
-        done: Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
-        onDone: () {
-          // Done 클릭시 isOnboarded = true로 저장
-          prefs.setBool("isOnboarded", true);
-
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomePage()),
-          );
-        },
-      ),
     );
   }
 }
@@ -299,6 +242,9 @@ class _HomePageState extends State<HomePage> {
                     future: bucketService.read(user.uid),
                     builder: (context, snapshot) {
                       final documents = snapshot.data?.docs ?? [];
+                      if (documents.isEmpty) {
+                        return Text("버킷 리스트를 작성해 주세요.");
+                      }
                       return ListView.builder(
                         itemCount: documents.length,
                         itemBuilder: (context, index) {
@@ -321,10 +267,12 @@ class _HomePageState extends State<HomePage> {
                               icon: Icon(CupertinoIcons.delete),
                               onPressed: () {
                                 // 삭제 버튼 클릭시
+                                bucketService.delete(doc.id);
                               },
                             ),
                             onTap: () {
                               // 아이템 클릭하여 isDone 업데이트
+                              bucketService.update(doc.id, !isDone);
                             },
                           );
                         },
