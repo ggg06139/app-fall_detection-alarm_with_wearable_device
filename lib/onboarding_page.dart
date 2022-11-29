@@ -19,7 +19,7 @@ class OnboardingPage extends StatelessWidget {
         color: Colors.black,
         fontSize: 18,
       ),
-      pageColor: Color.fromARGB(255, 206, 236, 207),
+      pageColor: Color.fromARGB(255, 228, 255, 228),
       titlePadding: EdgeInsets.fromLTRB(16.0, 75.0, 16.0, 0.0),
       bodyPadding: EdgeInsets.fromLTRB(16.0, 30.0, 16.0, 0.0),
     );
@@ -45,8 +45,8 @@ class OnboardingPage extends StatelessWidget {
           ),
           // 두 번째 페이지
           PageViewModel(
-            title: "시작하세요",
-            body: "'도담이'를 통해 낙상 후 2차 위험으로부터\n사랑하는 가족들을 지켜내세요",
+            title: "시작하세요.",
+            body: "'도담이'를 통해 낙상 후 2차 위험으로부터\n사랑하는 가족들을 지켜내세요.",
             image: Container(
               margin: EdgeInsets.only(top: 100),
               child: Image.asset(

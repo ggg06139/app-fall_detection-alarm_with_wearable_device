@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'auth_service.dart';
-import 'bucket_service.dart';
+import 'record_service.dart';
 import 'home_page.dart';
 import 'login_page.dart';
 import 'onboarding_page.dart';
@@ -24,7 +24,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthService()),
-        ChangeNotifierProvider(create: (context) => BucketService()),
+        ChangeNotifierProvider(create: (context) => RecordService()),
       ],
       child: const MyApp(),
     ),
