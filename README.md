@@ -13,7 +13,7 @@ Flutter
 ![학부 과제 어플 제작  저작권등록증_1](https://user-images.githubusercontent.com/70440577/230867876-8468038e-98e5-4104-9b08-bb505453a851.png)
 
 ### 관련 포트폴리오
-![슬라이드1](https://user-images.githubusercontent.com/70440577/231077839-26ff2600-c165-44af-89f0-a318f0911521.JPG)
+![슬라이드1](https://user-images.githubusercontent.com/70440577/231114211-e884b6f6-cbc1-4e1f-b55c-cd9f169e99a8.JPG)
 ![슬라이드2](https://user-images.githubusercontent.com/70440577/231077848-8d90f7b6-96f2-43c1-a939-a08e0d5d20d1.JPG)
 ![슬라이드3](https://user-images.githubusercontent.com/70440577/231077850-4fcfc6cf-abf7-4f9a-872f-de701a24d0b8.JPG)
 ![슬라이드4](https://user-images.githubusercontent.com/70440577/231077855-4830f51f-0754-4383-93f7-b7b79e2bd2a5.JPG)
