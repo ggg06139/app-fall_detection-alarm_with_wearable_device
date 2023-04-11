@@ -6,22 +6,23 @@ Dart
 ### 사용 프레임워크
 Flutter
 
-### 작성 시기
-2022년 하반기
+### 개발 시기
+2022년 11월 ~ 12월 (2개월)
 
 ### 저작권 등록증
 ![학부 과제 어플 제작  저작권등록증_1](https://user-images.githubusercontent.com/70440577/230867876-8468038e-98e5-4104-9b08-bb505453a851.png)
 
-
-### 기능
-![슬라이드1](https://user-images.githubusercontent.com/70440577/230868571-387850c6-a084-42ed-ba10-52128aa93a96.JPG)
-![슬라이드2](https://user-images.githubusercontent.com/70440577/230868575-8acf3001-3e15-44ed-9647-6543b3822aca.JPG)
-![슬라이드3](https://user-images.githubusercontent.com/70440577/230868576-68705aad-62ce-491d-af0c-3ceb5edeeece.JPG)
-![슬라이드4](https://user-images.githubusercontent.com/70440577/230868578-0ed153b4-b9ee-475a-a75c-5adfd4a4cded.JPG)
-![슬라이드5](https://user-images.githubusercontent.com/70440577/230868581-4c762868-fba5-4c2f-af0e-a317963f9e82.JPG)
-![슬라이드6](https://user-images.githubusercontent.com/70440577/230868582-cb4b25a4-852b-47f5-8f7a-8839910aa7cd.JPG)
-![슬라이드7](https://user-images.githubusercontent.com/70440577/230868584-a8ce0b0d-afb5-449e-a837-956aa074e907.JPG)
-![슬라이드8](https://user-images.githubusercontent.com/70440577/230868585-231b201b-00dc-49bc-8d20-1cbbc6cdbe11.JPG)
-![슬라이드9](https://user-images.githubusercontent.com/70440577/230868587-c2b7088d-3c70-4c3f-8240-240d7d18822f.JPG)
-![슬라이드10](https://user-images.githubusercontent.com/70440577/230868590-a7288bd0-2175-4eea-a0cc-f65bac3f4417.JPG)
-![슬라이드11](https://user-images.githubusercontent.com/70440577/230868592-0d15954a-b88d-4d4f-8bbf-d36ad1421892.JPG)
+### 관련 포트폴리오
+![슬라이드1](https://user-images.githubusercontent.com/70440577/231077839-26ff2600-c165-44af-89f0-a318f0911521.JPG)
+![슬라이드2](https://user-images.githubusercontent.com/70440577/231077848-8d90f7b6-96f2-43c1-a939-a08e0d5d20d1.JPG)
+![슬라이드3](https://user-images.githubusercontent.com/70440577/231077850-4fcfc6cf-abf7-4f9a-872f-de701a24d0b8.JPG)
+![슬라이드4](https://user-images.githubusercontent.com/70440577/231077855-4830f51f-0754-4383-93f7-b7b79e2bd2a5.JPG)
+![슬라이드5](https://user-images.githubusercontent.com/70440577/231077857-0d1bf080-f12c-41e1-b0f1-511656515a5b.JPG)
+![슬라이드6](https://user-images.githubusercontent.com/70440577/231077861-5008bf07-9719-4a17-9972-459233817633.JPG)
+![슬라이드7](https://user-images.githubusercontent.com/70440577/231077866-ada0aff3-e141-4afa-85f4-ae388c9dedf2.JPG)
+![슬라이드8](https://user-images.githubusercontent.com/70440577/231077869-81173eb0-afc1-4da7-8392-24347fb11222.JPG)
+![슬라이드9](https://user-images.githubusercontent.com/70440577/231077873-231b93db-644b-41ed-a6e7-5e48b4b05adc.JPG)
+![슬라이드10](https://user-images.githubusercontent.com/70440577/231078003-b1e908d8-0055-4cd7-bc4f-5eee7a7a79a4.JPG)
+![슬라이드11](https://user-images.githubusercontent.com/70440577/231078007-4fb3701c-5d98-4401-a272-94d0372a3914.JPG)
+![슬라이드12](https://user-images.githubusercontent.com/70440577/231078011-bd772c01-76cb-47b6-ba9b-b945a20df8f6.JPG)
+![슬라이드13](https://user-images.githubusercontent.com/70440577/231078015-e58ffc8b-bd90-412e-8461-1662ebf87c1d.JPG)
