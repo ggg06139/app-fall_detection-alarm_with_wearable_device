@@ -22,7 +22,6 @@ Flutter
 ![슬라이드7](https://user-images.githubusercontent.com/70440577/231077866-ada0aff3-e141-4afa-85f4-ae388c9dedf2.JPG)
 ![슬라이드8](https://user-images.githubusercontent.com/70440577/231077869-81173eb0-afc1-4da7-8392-24347fb11222.JPG)
 ![슬라이드9](https://user-images.githubusercontent.com/70440577/231077873-231b93db-644b-41ed-a6e7-5e48b4b05adc.JPG)
-![슬라이드10](https://user-images.githubusercontent.com/70440577/231078003-b1e908d8-0055-4cd7-bc4f-5eee7a7a79a4.JPG)
 ![슬라이드11](https://user-images.githubusercontent.com/70440577/231078007-4fb3701c-5d98-4401-a272-94d0372a3914.JPG)
 ![슬라이드12](https://user-images.githubusercontent.com/70440577/231078011-bd772c01-76cb-47b6-ba9b-b945a20df8f6.JPG)
 ![슬라이드13](https://user-images.githubusercontent.com/70440577/231078015-e58ffc8b-bd90-412e-8461-1662ebf87c1d.JPG)
